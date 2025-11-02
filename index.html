@@ -3,14 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Political Thought MCQ Quiz</title>
+    <title>Advanced Political Thought Quiz</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Lora:wght@400;500&display=swap');
+
+        :root {
+            --primary-color: #4299e1;
+            --primary-dark: #2b6cb0;
+            --correct-bg: #c6f6d5;
+            --correct-border: #68d391;
+            --correct-text: #2f855a;
+            --incorrect-bg: #fed7d7;
+            --incorrect-border: #fc8181;
+            --incorrect-text: #c53030;
+            --light-bg: #f0f4f8;
+            --white: #ffffff;
+            --text-dark: #2d3748;
+            --text-light: #4a5568;
+            --border-color: #e2e8f0;
+        }
 
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #f0f4f8;
-            color: #333;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -20,31 +36,75 @@
         }
 
         #quiz-container {
-            background-color: #ffffff;
+            background-color: var(--white);
             border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
             width: 100%;
-            max-width: 700px;
+            max-width: 800px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
         }
+        
+        #progress-bar-container {
+            width: 100%;
+            background-color: var(--border-color);
+            height: 8px;
+        }
+        
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
 
         #header {
-            padding: 24px 30px;
-            background-color: #4a5568;
+            padding: 20px 30px;
+            background-color: var(--text-light);
             color: white;
+            border-bottom: 1px solid var(--border-color);
         }
 
         #header h1 {
-            margin: 0;
-            font-size: 24px;
+            margin: 0 0 10px 0;
+            font-size: 22px;
+            font-family: 'Lora', serif;
         }
 
-        #header p {
-            margin: 4px 0 0;
-            font-size: 16px;
-            opacity: 0.9;
+        #quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        #quiz-controls label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        #jump-dropdown, #shuffle-btn {
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #718096;
+            background-color: var(--white);
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+        
+        #shuffle-btn {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        #shuffle-btn:hover {
+            background-color: var(--primary-dark);
         }
 
         #question-area {
@@ -56,6 +116,8 @@
             font-weight: 500;
             margin-bottom: 24px;
             line-height: 1.5;
+            color: var(--text-dark);
+            font-family: 'Lora', serif;
         }
 
         #options-container {
@@ -71,16 +133,17 @@
             font-size: 16px;
             font-weight: 500;
             text-align: left;
-            background-color: #f7fafc;
-            border: 2px solid #e2e8f0;
+            background-color: #fdfdfd;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s ease;
             box-sizing: border-box;
+            color: var(--text-light);
         }
 
         .option-btn:hover:not(:disabled) {
-            background-color: #e2e8f0;
+            background-color: #f7fafc;
             border-color: #cbd5e0;
         }
 
@@ -90,31 +153,34 @@
         }
 
         .option-btn.correct {
-            background-color: #c6f6d5;
-            border-color: #68d391;
-            color: #2f855a;
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+            color: var(--correct-text);
+            font-weight: 700;
         }
 
         .option-btn.incorrect {
-            background-color: #fed7d7;
-            border-color: #fc8181;
-            color: #c53030;
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+            color: var(--incorrect-text);
+            font-weight: 700;
         }
 
         #feedback-area {
             padding: 0 30px 30px;
-            text-align: right;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         #feedback-text {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
-            height: 25px;
-            margin-bottom: 16px;
+            height: 28px;
         }
 
         #next-btn {
-            background-color: #4299e1;
+            background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: 8px;
@@ -123,25 +189,51 @@
             font-weight: 700;
             cursor: pointer;
             transition: background-color 0.2s ease;
-            visibility: hidden; /* Hidden by default */
+            visibility: hidden;
         }
 
         #next-btn:hover {
-            background-color: #2b6cb0;
+            background-color: var(--primary-dark);
         }
         
-        #progress-bar-container {
-            width: 100%;
-            background-color: #e2e8f0;
-            height: 8px;
+        #info-area {
+            background-color: #f7fafc;
+            border-top: 2px solid var(--border-color);
+            padding: 24px 30px;
+            display: none; /* Hidden by default */
         }
         
-        #progress-bar {
-            width: 0%;
-            height: 100%;
-            background-color: #4299e1;
-            transition: width 0.3s ease;
+        #info-area h3 {
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            color: var(--text-dark);
+            font-family: 'Lora', serif;
         }
+        
+        #info-list {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        #info-list li {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-light);
+            border-left: 3px solid var(--primary-color);
+            padding-left: 12px;
+        }
+        
+        #info-list li .ans {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
     </style>
 </head>
 <body>
@@ -151,9 +243,16 @@
             <div id="progress-bar"></div>
         </div>
         <div id="header">
-            <h1>Modern Western Political Thought</h1>
-            <p id="question-counter">Question 1 of 160</p>
+            <h1>Political Thought Quiz</h1>
+            <div id="quiz-controls">
+                <button id="shuffle-btn">Shuffle & Restart</button>
+                <div>
+                    <label for="jump-dropdown">Go to: </label>
+                    <select id="jump-dropdown"></select>
+                </div>
+            </div>
         </div>
+        
         <div id="question-area">
             <div id="question-text">Loading...</div>
             <div id="options-container">
@@ -163,189 +262,240 @@
                 <button class="option-btn" data-option="d"></button>
             </div>
         </div>
+
         <div id="feedback-area">
             <div id="feedback-text"></div>
             <button id="next-btn">Next Question</button>
         </div>
+        
+        <div id="info-area">
+            <h3>Related Facts from your PDF:</h3>
+            <ul id="info-list"></ul>
+        </div>
     </div>
 
     <script>
+        // MASTER database of all questions from the PDF
+        // Each question now has a 'topic' tag for the related info feature
         const questions = [
-            { q: "Leviathan was written by:", o: ["Plato", "Aristotle", "Hobbes", "Locke"], a: "c" },
-            { q: "Who is regarded as the apostle of political absolutism?", o: ["Locke", "Rousseau", "Bentham", "Hobbes"], a: "d" },
-            { q: "The concept of popular sovereignty is associated with", o: ["Hegel", "Rousseau", "Locke", "Hobbes"], a: "b" },
-            { q: "The doctrine of general will was expounded by", o: ["Rousseau", "Marx", "Locke", "Hobbes"], a: "a" },
-            { q: "Social contract was written by", o: ["Bentham", "Hobbes", "Locke", "Rousseau"], a: "d" },
-            { q: "Who is known as the champion of limited Govt.", o: ["Hobbes", "Locke", "Lenin", "Rousseau"], a: "b" },
-            { q: "Great Political Thinkers was Written by", o: ["C.L.Wayper", "Maxey", "Ebenstein", "Sabine"], a: "c" },
-            { q: "Leviathan was published after:", o: ["The Glorious revolution", "English civil war", "Russian revolution", "French revolution"], a: "b" },
-            { q: "Two treatises on civil govt was written by", o: ["Locke", "Hobbes", "J.S.Mill", "Hegel"], a: "a" },
-            { q: "The term 'right to appeal to Heaven' was used by", o: ["Hobbes", "Locke", "Marx", "Lenin"], a: "b" },
-            { q: "Name the philosopher who presented a dismal picture of men in the state nature", o: ["Rousseau", "Hobbes", "Locke", "Bentham"], a: "b" },
-            { q: "Who declard that man is born free; every where he is in chains'", o: ["Rousseau", "Hobbes", "Marx", "Lenin"], a: "a" },
-            { q: "Who wrote that ' state is the mach of god on earth'", o: ["Lenin", "Marx", "Green", "Hegel"], a: "d" },
-            { q: "'State and Revolution' was written by", o: ["Mao", "Lenin", "Marx", "Hobbes"], a: "b" },
-            { q: "Pleasure pain theory was expounded by", o: ["Karl Marx", "Lenin", "Rousseau", "Bentham"], a: "d" },
-            { q: "Felicific calculus was recommended by", o: ["Hobbes", "James Mill", "Bentham", "J.S.Mill"], a: "c" },
-            { q: "Theory of representative government was expounded by", o: ["Bentham", "J.S.Mill", "Hegel", "Green"], a: "b" },
-            { q: "Who defines liberty is 'absence of restraints'?", o: ["Hegel", "Green", "J.S.Mill", "Marx"], a: "c" },
-            { q: "'A critique of political economy' was written by", o: ["Marx", "Locke", "Lenin", "Mao"], a: "a" },
-            { q: "The principle of justice as fairness was expounded by", o: ["Plato", "Cicero", "J.S.Mill", "John Rawls"], a: "d" },
-            { q: "Name the scholar who has pointed out that justice as the first virtue of social institution", o: ["John Rawls", "J.J.Rousseau", "J.S.Mill", "Hegel"], a: "a" },
-            { q: "John Rawl's well known book a 'Theory of justice' was published in", o: ["1961", "1971", "1981", "1991"], a: "b" },
-            { q: "Who is the author of A theory of justice'", o: ["Plato", "Cicero", "John Rawls", "Marx"], a: "c" },
-            { q: "'A theory of fair equality of opportunity' was expounded by", o: ["Gramsci", "Locke", "Hobbes", "John Rawls"], a: "d" },
-            { q: "John Rawls was born in", o: ["Paris", "Baltimore", "London", "Moscow"], a: "b" },
-            { q: "Who is the author of political liberalism", o: ["Gramsci", "Marx", "Hobbes", "John Rawls"], a: "d" },
-            { q: "The principle of 'fair equality of opportunity' was developed by", o: ["John Rawls", "Plato", "Rousseau", "Locke"], a: "a" },
-            { q: "Who wrote that justice is the first virtue of social institution'", o: ["Gramsci", "John Rawls", "Hegel", "Hobbes"], a: "b" },
-            { q: "Gramsci was the leader of", o: ["French communist party", "Italian communist party", "Soviet communist party", "Japanese communist party"], a: "b" },
-            { q: "'Anarchy State and Utopia' was written by", o: ["John Rawls", "Robert Nozick", "Hobbes", "Locke"], a: "b" },
-            { q: "Name the thinker who believes that the pleasure of pushpin is as good as poetry'", o: ["J.S.Mill", "Jeremy Bentham", "Hegel", "Green"], a: "b" },
-            { q: "Essay concerning human Understanding' was written by", o: ["John Locke", "Thomas Hobbes", "Hegel", "Marx"], a: "a" },
-            { q: "Name the political thinker who believes that 'right is a claim of the individual'", o: ["Rousseau", "Hegel", "Locke", "Hobbes"], a: "c" },
-            { q: "Indentify the scholar who regards' Hobbesian State is authoritarian, not totalitarian'", o: ["C.L.Wayper", "C.C.Maxy", "William Ebenstein", "Sabine"], a: "c" },
-            { q: "Rousseau was born in", o: ["Geneva", "London", "Paris", "Rome"], a: "a" },
-            { q: "'Discourses on the origins of Inequality' was written by", o: ["John Locke", "Thomas Hobbes", "Rousseau", "Marx"], a: "c" },
-            { q: "Whose social contract was social and not governmental?", o: ["John Locke", "Rousseau", "Hobbes", "Marx"], a: "b" },
-            { q: "Discourse on political Economy was written by", o: ["Rousseau", "Hobbes", "Locke", "Lenin"], a: "a" },
-            { q: "Who was regarded as the spiritual father of French revolution?", o: ["Marx", "J.S.Mill", "Locke", "Rousseau"], a: "d" },
-            { q: "Name the scholar who has summed up the Hegelian state as a greater being, a spirit, a super-personality entity'", o: ["Hobhouse", "Stalin", "Marx", "Mao"], a: "a" },
-            { q: "A Fragament on government was written by", o: ["J.S.Mill", "Jeremy Bentham", "Hegel", "Green"], a: "b" },
-            { q: "Who is closely associated with the doctrine of age of reason?", o: ["Hobbes", "Thomas Paine", "Locke", "Mao"], a: "b" },
-            { q: "Who viewed 'hedonism not only as a principle of Motivation, but also as a principle of action'", o: ["J.S.Mill", "James Mill", "Jeremy Bentham", "Hegel"], a: "c" },
-            { q: "Who believed that every individual is the judge of his own happiness?", o: ["J.S.Mill", "James Mill", "Hegel", "Jeremy Bentham"], a: "d" },
-            { q: "Bentham's doctrine of utility applied not only to morals but also:", o: ["Legislation and politics", "Economics", "Ethics", "Mathematics"], a: "a" },
-            { q: "J.S. Mill was born in", o: ["Paris", "Moscow", "London", "Rome"], a: "c" },
-            { q: "System of Logic was written by", o: ["Marx", "Lenin", "Gramsci", "J.S.Mill"], a: "d" },
-            { q: "Who saved Betham from death and decay?", o: ["James Mill", "J.S.Mill", "Hegel", "Green"], a: "b" },
-            { q: "Who wrote that Mill is a prophet of empty liberty and abstract individual?", o: ["Marx", "Lenin", "Mao", "Ernest Barker"], a: "d" },
-            { q: "'Machinery of Representation' was written by", o: ["Thomas Hare", "J.S.Mill", "Harold Laski", "Hegel"], a: "a" },
-            { q: "Who was the founder of modern Idealism?", o: ["Green", "Plato", "Gandhiji", "Hegel"], a: "d" },
-            { q: "Hegel has borrowed dialectic method from", o: ["Plato", "Aristotle", "Socrates", "Hobbes"], a: "c" },
-            { q: "The doctrine of 'what is real is rational and what is rational is real' is expounded by", o: ["Hegel", "Green", "Plato", "Aristotle"], a: "a" },
-            { q: "The principle of 'greatest happiness of the greatest number' was expounded by", o: ["Hegel", "Green", "Bentham", "J.S.Mill"], a: "c" },
-            { q: "Who adopted Hegelianism, to revise liberalism in the late 19th century?", o: ["J.S.Mill", "T.H.Green", "John Locke", "Harold Laski"], a: "b" },
-            { q: "Green was born in", o: ["New York", "Yorkshire", "Paris", "Rome"], a: "b" },
-            { q: "Lectures on Liberal Legislation was written by", o: ["T.H.Green", "J.S.Mill", "Harold Laski", "Burke"], a: "a" },
-            { q: "The doctrine of 'will, not force, is the basis of state' was expounded by", o: ["Marx", "Green", "Hegel", "Mao"], a: "b" },
-            { q: "Who regarded state as a natural and necessary institution?", o: ["Marx", "Lenin", "Bentham", "Green"], a: "d" },
-            { q: "Who wrote that the function of the state is to remove obstacles to freedom", o: ["Marx", "Green", "Lenin", "Mao"], a: "b" },
-            { q: "Who laid the foundations for modern welfare state?", o: ["Green", "Hegel", "Hobbes", "Gramsci"], a: "a" },
-            { q: "Name the thinker who tried to safeguard the individual against the absolute power of the state;", o: ["Hegel", "Marx", "Green", "Hobbes"], a: "c" },
-            { q: "Who defines freedom as of the positive power of doing something worth doing and worth enjoying?", o: ["Hegel", "Green", "Hobbes", "Locke"], a: "b" },
-            { q: "Who rejected the mechanistic theory of the state?", o: ["Lenin", "Mao", "Marx", "Green"], a: "d" },
-            { q: "Name the thinker who wrote that the state does not create right but the rights are derived from the state?", o: ["Hegel", "Hobbes", "Rousseau", "Green"], a: "a" },
-            { q: "Which book is regarded as the Gospel or Bible of socialism?", o: ["State and revolution", "Prison Note book", "Contradictions", "Das capital"], a: "d" },
-            { q: "'Open society and its Enemies' was written by", o: ["Marx", "Karl popper", "John Rawls", "EMS"], a: "b" },
-            { q: "Name the thinker who believes that the individual is subordinate to the state.", o: ["Hegel", "Green", "Bentham", "Marx"], a: "a" },
-            { q: "Name the thinker who wrote that freedom consists in obedience to any moral will?", o: ["Marx", "Kant", "Hegel", "Green."], a: "b" },
-            { q: "The doctrine of class struggle is central to the understanding of", o: ["Social contract Theory", "idealism", "liberalisation", "Marxian theory"], a: "d" },
-            { q: "Who wrote that class conflict is the real driving force of human history?", o: ["Hobbes", "Marx", "Hegel", "Bentham"], a: "b" },
-            { q: "Theory of surplus value is discussed by Marx in his major work:", o: ["What to be done", "state and revolution", "Das capital", "Prison note book"], a: "c" },
-            { q: "Name the scholar who criticised Marxism a 'utopia but a generous and humane one?", o: ["Lenin", "Popper", "Sabine", "C.L Wayper"], a: "c" },
-            { q: "Who made Marxism a practical creed in Russia?", o: ["Stalin", "Lenin", "Brezhveve", "Gorbachove"], a: "b" },
-            { q: "Lenin was born in", o: ["Moscow", "Paris", "Simbrisk", "London"], a: "c" },
-            { q: "Lenin's well known book 'State and Revolution' was written in", o: ["1917", "1920", "1925", "1927"], a: "a" },
-            { q: "Who wrote that imperialism is the final or last stage of capitalism?", o: ["Laski", "Hobbes", "Lenin", "Rousseau"], a: "c" },
-            { q: "Who described the communist party as the 'revolutionary vanguard of the proletariat'", o: ["Lenin", "Althusser", "Engels", "Gramsci"], a: "a" },
-            { q: "Who expounded the doctrine that politics devoid of Religion is meaningless'?", o: ["Ambedkar", "Sree Narayana Guru", "Karl Marx", "Gandhiji"], a: "d" },
-            { q: "Who wrote that non-violence is the heart of all religions?", o: ["Nehru", "Vivekananda", "Gandhiji", "Thilak"], a: "c" },
-            { q: "Which method was regarded by Gandjiji as a 'complete effective and bloodless substitute of armed revolt?", o: ["Civil Disobedience", "Fasting", "Picketing", "Revolt"], a: "a" },
-            { q: "Who characterised Gandhian Principle of ahimsa as a 'positive and dynamic method of action'?", o: ["Thilak", "Ambedkar", "Patel", "Nehru"], a: "d" },
-            { q: "Gandhiji identifies Rama Rajya as :", o: ["Welfare State", "communist State", "Kingdom of god", "Democracy"], a: "c" },
-            { q: "In the ideal state of Gandhiji there is no political power because there is no:", o: ["State", "God", "ethics", "Money power"], a: "a" },
-            { q: "Gandhian principle of Economic swarj stands for", o: ["socialism", "Social justice", "End of capitalism", "Neo liberalism"], a: "b" },
-            { q: "Gandhi was highly critical of", o: ["Capitalism", "Communism", "Fascism", "Both capitalism and Socialism"], a: "d" },
-            { q: "In Gandhian economics the supreme consideration is", o: ["Human being", "State", "Economics", "Morality"], a: "a" },
-            { q: "The Original name of Manvendra Nath Roy was", o: ["Desabhandu", "Narendranadh Bhattacharya", "Ramakrishna", "Gokhale"], a: "b" },
-            { q: "Who regards Marx as a merciless critic of social injustice?", o: ["Stalin", "M.N.Roy", "Gandhiji", "Nehru"], a: "b" },
-            { q: "Who regarded Marxian theory of class struggle has subordinated individual consciousness?", o: ["M.N.Roy", "Savarkar", "Gandhiji", "Nehru"], a: "a" },
-            { q: "Who is the chief exponent of the doctrine of New Humanism?", o: ["Marx", "Lenin", "Mao", "M.N.Roy"], a: "d" },
-            { q: "Roy's theory of New Humanism revolves around :", o: ["State", "society", "Man", "Economy"], a: "c" },
-            { q: "Roy reduces the functions of the state to the", o: ["Maximum", "Minimum", "Unlimited", "None of the above"], a: "b" },
-            { q: "Reason romanticism and revolution was written by", o: ["M.N.Roy", "Karl Marx", "Lenin", "Mao"], a: "a" },
-            { q: "Who believes that party politics has given rise to power politics'", o: ["Gandhiji", "Thilak", "M.N.Roy", "Nehru"], a: "c" },
-            { q: "Name the political thinker who recommends abolition of party system", o: ["M.N.Roy", "Gandhiji", "Nehru", "Ambedkar"], a: "a" },
-            { q: "Gramsci was imprisoned by Mussolini in", o: ["1921", "1925", "1926", "1937"], a: "c" },
-            { q: "Who held view that each individual gave up his natural rights to the community as a whole.", o: ["Hobbes", "Rousseau", "Locke", "Hegel"], a: "b" },
-            { q: "Identify the thinker who believed that from the laws of nature, individuals derived the natural rights.", o: ["Hobbes", "Rousseau", "Locke", "Plato"], a: "c" },
-            { q: "Name the philosopher who explains the theory of class struggle with the help of his theory of surplus value.", o: ["Hobbes", "Bakunin", "Plato", "Marx"], a: "d" },
-            { q: "Marx employed the term Alienation to explain.", o: ["Dehumanisation", "Exploitation", "Class struggle", "Surplus Value"], a: "a" },
-            { q: "Who expounded the theory that once communism is fully established, the state becomes absolutely unnecessary?", o: ["Plato", "Lenin", "Bakunin", "J.S.Mill"], a: "b" },
-            { q: "Lenin's major work 'What is To Be Done?' was published in", o: ["1888", "1900", "1902", "1917"], a: "c" },
-            { q: "Mao was born in", o: ["1893", "1888", "1917", "1900"], a: "a" },
-            { q: "'Analysis of Chinese Society' was written by", o: ["Deng", "Hu Jintao", "Mao", "None of the above"], a: "c" },
-            { q: "The doctrine of contradiction is one of the cardinal Principles of", o: ["Marx", "Lenin", "Gramsci", "Mao"], a: "d" },
-            { q: "Identify the philosopher who gave a famous call of 'Let Hundred Flowers Bloom'", o: ["Mao", "Marx", "Lenin", "Gramsci"], a: "a" },
-            { q: "The principle of Mass Line Populism was expounded by", o: ["Locke", "Hegel", "Marx", "Mao"], a: "d" },
-            { q: "The doctrine of 'Contradiction' is closely associated with the philosophy of:", o: ["Rousseau", "Mao", "Marx", "Gramsci"], a: "b" },
-            { q: "The theory of 'Great Leap Forward' was recommended by", o: ["Mao", "Marx", "Lenin", "Gramsci"], a: "a" },
-            { q: "The Great Proletarian Cultural Revolution was expounded by", o: ["Marx", "Lenin", "Mao", "Bakunin"], a: "c" },
-            { q: "The word 'anarchy' means", o: ["Rule", "Without rule", "Peace", "Government"], a: "b" },
-            { q: "Which school of thought believes that political authority is unnecessary and undesirable?", o: ["Socialism", "Democracy", "Liberalism", "Anarchism"], a: "d" },
-            { q: "Who is regarded as the first classical Anarchist thinker?", o: ["Mussolini", "Hitler", "Godwin", "Mao"], a: "c" },
-            { q: "Mao started his career as a", o: ["Teacher", "Librarian", "Doctor", "Lawyer"], a: "b" },
-            { q: "Who is the author of 'An enquiry concerning political Justice'?", o: ["Marx", "Lenin", "Mao", "Godwin"], a: "d" },
-            { q: "Who is regarded as the most systematic anarchist thinker?", o: ["Bakunin", "Marx", "Godwin", "Mao"], a: "a" },
-            { q: "Bakunin was born in", o: ["1841", "1814", "1872", "1842"], a: "b" },
-            { q: "Whose activities were predominantly in the field of practical agitation and organization?", o: ["Marx", "Mao", "Hobbes", "Bakunin"], a: "d" },
-            { q: "Who believed that state is morally debasing to all members of the civilised community?", o: ["Locke", "Rousseau", "Bakunin", "Marx"], a: "c" },
-            { q: "Who believed that private property creates physical and moral evils of the kinds?", o: ["Bakunin", "Locke", "Hobbes", "Hegel"], a: "a" },
-            { q: "Name the political thinker who recommended both evolutionary and revolutionary methods for the attainment of his goals.", o: ["Lenin", "Bakunin", "Hegel", "Hobbes"], a: "b" },
-            { q: "Identify the anarchist who is regarded as a Russian Geographer", o: ["Godwin", "Bakunin", "Kropotkin", "None of the above"], a: "c" },
-            { q: "Peter Kropotkin was born in;", o: ["1842", "1814", "1841", "1921"], a: "a" },
-            { q: "Name the political thinker who believed that the hindrances to the progress of human society are the state, private property and religion.", o: ["Bakunin", "Kropotkin", "Lenin", "Mao"], a: "b" },
-            { q: "Which school of thought is highly critical of religion?", o: ["Liberalism", "Capitalism", "Anarchism", "Individualism"], a: "c" },
-            { q: "Who is the author of 'Socialism: Utopian and Scientific'?", o: ["Engels", "Marx", "Lenin", "Mao"], a: "a" },
-            { q: "Marx borrowed his Dialectic method from:", o: ["Green", "Burke", "Hegel", "Aristotle"], a: "c" },
-            { q: "Diatectical Materialism of Marx is more interested in motion than :", o: ["Matter", "Ideas", "Economy", "None of these"], a: "a" },
-            { q: "Name the scholar who believed that the economic structure of society determines the superstructure of consciousness.", o: ["Hegel", "Plato", "Marx", "Gramsci"], a: "c" },
-            { q: "The thesis entitled 'the anatomy of civil society is to be found in political economy'", o: ["Lenin", "Plato", "Lenin", "Marx"], a: "d" },
-            { q: "The first volume of Das Capital is published in.", o: ["1848", "1867", "1852", "1870"], a: "b" },
-            { q: "Who described his socialism as scientific?", o: ["Plato", "Robert Own", "Marx", "Gramsci"], a: "c" },
-            { q: "Who interpreted liberalism and classical economics as articulating and defending the interests of the middle class?", o: ["Marx", "Hobbes", "Locke", "Rousseau"], a: "a" },
-            { q: "Name the Philosopher who has adapted Hegelianism to revise liberalism in the late 19th century", o: ["Burke", "Locke", "Green", "Laski"], a: "c" },
-            { q: "Who rejects the liberal concept of freedom as absence of restraints?", o: ["Hobbes", "Burke", "Rawls", "Hegel"], a: "d" },
-            { q: "Identify the scholar who has considered freedom 'Consists in his submitting to and identifying himself with the higher rationality of state and law'.", o: ["Hegel", "Green", "Locke", "Hobbes"], a: "a" },
-            { q: "Who believed that rights are derived from the state and therefore no man and have any right against the state?", o: ["Green", "Hobbes", "Hegel", "Locke"], a: "c" },
-            { q: "Name the Philosopher who considered the state as the highest manifestation of reason.", o: ["Green", "Marx", "Rawls", "Hegel"], a: "d" },
-            { q: "Who considered the dialectical principle 'constitutes the life and soul of scientific progress'?", o: ["Plato", "Marx", "Hegel", "Engels"], a: "c" },
-            { q: "Who believed that history is the process by which the spirit passes from knowing nothing to full knowledge of itself?", o: ["Plato", "Green", "Marx", "Hegel"], a: "d" },
-            { q: "The essay entitled 'On the people's Democratic Dictatorship' was written by", o: ["Mao", "Gramsui", "Marx", "Lenin"], a: "a" },
-            { q: "Name the Philosopher who lived at a time of great constitutional crisis in England.", o: ["Laski", "Burke", "Hobbes", "Locke"], a: "c" },
-            { q: "The theory of consent is closely related to the writings of", o: ["Hobbes", "Locke", "Rousseau", "Bentham"], a: "b" },
-            { q: "Who expounded the theory that the general will would be the source of all laws?", o: ["Rousseau", "Locke", "Hobbes", "Hegel"], a: "a" },
-            { q: "Name the thinker who believed that the government is the agent of the general will", o: ["Locke", "Hobbes", "Hegel", "Rousseau"], a: "d" },
-            { q: "In whose social contract man does not surrender completely to a sovereign ruler?", o: ["Locke", "Rousseau", "Hobbes", "None of these"], a: "b" },
-            { q: "Who viewed hedonism not only as a principle of motivation, but also a principle of action?", o: ["Bentham", "Mill", "Hegel", "James Mill"], a: "a" },
-            { q: "Name the Scholar who criticized Bentham's Pleasure pain theory as 'uninspiring and merely mechanical'", o: ["C.C.Maxey", "C.L.Wayper", "Ebenstein", "Sabine"], a: "c" },
-            { q: "Identify the thinker who wrote that 'State is a moral institution with a moral end'", o: ["J.S.Mill", "Bentham", "Marx", "Hegel"], a: "a" },
-            { q: "Who regarded utility as a noble sentiment associated with Christian religion?", o: ["James Mill", "Bentham", "J.S.Mill", "Hegel"], a: "c" },
-            { q: "Who declared that 'Over himself, over his own body and mind, the individual is sovereign'", o: ["Bentham", "Marx", "Mao", "J.S.Mill"], a: "d" },
-            { q: "Name the Scholar who holds the view that man obeys the state because he is afraid of the consequences of disobedience.", o: ["Hegel", "Green", "Marx", "Lenin"], a: "a" },
-            { q: "Identify the scholar who believed that class struggle in the modern period is simpler than earlier class struggle.", o: ["Plato", "Hegel", "Marx", "Gramsci"], a: "c" },
-            { q: "Marx explains the whole process of exploitation with the help of his theory of", o: ["Dialectical Materialism", "Surplus Value", "Historical Materialism", "None of these"], a: "b" },
-            { q: "Who expounded the thesis that capitalism contains its own seeds of destruction?", o: ["Marx", "Plato", "Hobbes", "Rousseau"], a: "a" },
-            { q: "Lenin's major work 'State and Revolution' was written in", o: ["1900", "1914", "1917", "1947"], a: "c" },
-            { q: "Who made the statement that as soon as communism is established, the state becomes unnecessary?", o: ["Mao", "Lenin", "Plato", "None of these"], a: "b" },
-            { q: "Name the leader who made a distinction between organization of workers and organization of revolutionaries.", o: ["Mao", "Gramsui", "Lenin", "Plato"], a: "c" },
-            { q: "Which political leadership now describes the cultural revolution as nothing less than a calamity for their country;", o: ["Present Communist leadership in China", "Mao", "American", "Russian"], a: "a" }
+            { q: "Leviathan was written by:", o: ["Plato", "Aristotle", "Hobbes", "Locke"], a: "c", topic: "Hobbes" },
+            { q: "Who is regarded as the apostle of political absolutism?", o: ["Locke", "Rousseau", "Bentham", "Hobbes"], a: "d", topic: "Hobbes" },
+            { q: "The concept of popular sovereignty is associated with", o: ["Hegel", "Rousseau", "Locke", "Hobbes"], a: "b", topic: "Rousseau" },
+            { q: "The doctrine of general will was expounded by", o: ["Rousseau", "Marx", "Locke", "Hobbes"], a: "a", topic: "Rousseau" },
+            { q: "Social contract was written by", o: ["Bentham", "Hobbes", "Locke", "Rousseau"], a: "d", topic: "Rousseau" },
+            { q: "Who is known as the champion of limited Govt.", o: ["Hobbes", "Locke", "Lenin", "Rousseau"], a: "b", topic: "Locke" },
+            { q: "Great Political Thinkers was Written by", o: ["C.L.Wayper", "Maxey", "Ebenstein", "Sabine"], a: "c", topic: "Other" },
+            { q: "Leviathan was published after:", o: ["The Glorious revolution", "English civil war", "Russian revolution", "French revolution"], a: "b", topic: "Hobbes" },
+            { q: "Two treatises on civil govt was written by", o: ["Locke", "Hobbes", "J.S.Mill", "Hegel"], a: "a", topic: "Locke" },
+            { q: "The term 'right to appeal to Heaven' was used by", o: ["Hobbes", "Locke", "Marx", "Lenin"], a: "b", topic: "Locke" },
+            { q: "Name the philosopher who presented a dismal picture of men in the state nature", o: ["Rousseau", "Hobbes", "Locke", "Bentham"], a: "b", topic: "Hobbes" },
+            { q: "Who declard that man is born free; every where he is in chains'", o: ["Rousseau", "Hobbes", "Marx", "Lenin"], a: "a", topic: "Rousseau" },
+            { q: "Who wrote that ' state is the mach of god on earth'", o: ["Lenin", "Marx", "Green", "Hegel"], a: "d", topic: "Hegel" },
+            { q: "'State and Revolution' was written by", o: ["Mao", "Lenin", "Marx", "Hobbes"], a: "b", topic: "Lenin" },
+            { q: "Pleasure pain theory was expounded by", o: ["Karl Marx", "Lenin", "Rousseau", "Bentham"], a: "d", topic: "Bentham" },
+            { q: "Felicific calculus was recommended by", o: ["Hobbes", "James Mill", "Bentham", "J.S.Mill"], a: "c", topic: "Bentham" },
+            { q: "Theory of representative government was expounded by", o: ["Bentham", "J.S.Mill", "Hegel", "Green"], a: "b", topic: "J.S. Mill" },
+            { q: "Who defines liberty is 'absence of restraints'?", o: ["Hegel", "Green", "J.S.Mill", "Marx"], a: "c", topic: "J.S. Mill" },
+            { q: "'A critique of political economy' was written by", o: ["Marx", "Locke", "Lenin", "Mao"], a: "a", topic: "Marx" },
+            { q: "The principle of justice as fairness was expounded by", o: ["Plato", "Cicero", "J.S.Mill", "John Rawls"], a: "d", topic: "Rawls" },
+            { q: "Name the scholar who has pointed out that justice as the first virtue of social institution", o: ["John Rawls", "J.J.Rousseau", "J.S.Mill", "Hegel"], a: "a", topic: "Rawls" },
+            { q: "John Rawl's well known book a 'Theory of justice' was published in", o: ["1961", "1971", "1981", "1991"], a: "b", topic: "Rawls" },
+            { q: "Who is the author of A theory of justice'", o: ["Plato", "Cicero", "John Rawls", "Marx"], a: "c", topic: "Rawls" },
+            { q: "'A theory of fair equality of opportunity' was expounded by", o: ["Gramsci", "Locke", "Hobbes", "John Rawls"], a: "d", topic: "Rawls" },
+            { q: "John Rawls was born in", o: ["Paris", "Baltimore", "London", "Moscow"], a: "b", topic: "Rawls" },
+            { q: "Who is the author of political liberalism", o: ["Gramsci", "Marx", "Hobbes", "John Rawls"], a: "d", topic: "Rawls" },
+            { q: "The principle of 'fair equality of opportunity' was developed by", o: ["John Rawls", "Plato", "Rousseau", "Locke"], a: "a", topic: "Rawls" },
+            { q: "Who wrote that justice is the first virtue of social institution'", o: ["Gramsci", "John Rawls", "Hegel", "Hobbes"], a: "b", topic: "Rawls" },
+            { q: "Gramsci was the leader of", o: ["French communist party", "Italian communist party", "Soviet communist party", "Japanese communist party"], a: "b", topic: "Gramsci" },
+            { q: "'Anarchy State and Utopia' was written by", o: ["John Rawls", "Robert Nozick", "Hobbes", "Locke"], a: "b", topic: "Other" },
+            { q: "Name the thinker who believes that the pleasure of pushpin is as good as poetry'", o: ["J.S.Mill", "Jeremy Bentham", "Hegel", "Green"], a: "b", topic: "Bentham" },
+            { q: "Essay concerning human Understanding' was written by", o: ["John Locke", "Thomas Hobbes", "Hegel", "Marx"], a: "a", topic: "Locke" },
+            { q: "Name the political thinker who believes that 'right is a claim of the individual'", o: ["Rousseau", "Hegel", "Locke", "Hobbes"], a: "c", topic: "Locke" },
+            { q: "Indentify the scholar who regards' Hobbesian State is authoritarian, not totalitarian'", o: ["C.L.Wayper", "C.C.Maxy", "William Ebenstein", "Sabine"], a: "c", topic: "Hobbes" },
+            { q: "Rousseau was born in", o: ["Geneva", "London", "Paris", "Rome"], a: "a", topic: "Rousseau" },
+            { q: "'Discourses on the origins of Inequality' was written by", o: ["John Locke", "Thomas Hobbes", "Rousseau", "Marx"], a: "c", topic: "Rousseau" },
+            { q: "Whose social contract was social and not governmental?", o: ["John Locke", "Rousseau", "Hobbes", "Marx"], a: "b", topic: "Rousseau" },
+            { q: "Discourse on political Economy was written by", o: ["Rousseau", "Hobbes", "Locke", "Lenin"], a: "a", topic: "Rousseau" },
+            { q: "Who was regarded as the spiritual father of French revolution?", o: ["Marx", "J.S.Mill", "Locke", "Rousseau"], a: "d", topic: "Rousseau" },
+            { q: "Name the scholar who has summed up the Hegelian state as a greater being, a spirit, a super-personality entity'", o: ["Hobhouse", "Stalin", "Marx", "Mao"], a: "a", topic: "Hegel" },
+            { q: "A Fragament on government was written by", o: ["J.S.Mill", "Jeremy Bentham", "Hegel", "Green"], a: "b", topic: "Bentham" },
+            { q: "Who is closely associated with the doctrine of age of reason?", o: ["Hobbes", "Thomas Paine", "Locke", "Mao"], a: "b", topic: "Other" },
+            { q: "Who viewed 'hedonism not only as a principle of Motivation, but also as a principle of action'", o: ["J.S.Mill", "James Mill", "Jeremy Bentham", "Hegel"], a: "c", topic: "Bentham" },
+            { q: "Who believed that every individual is the judge of his own happiness?", o: ["J.S.Mill", "James Mill", "Hegel", "Jeremy Bentham"], a: "d", topic: "Bentham" },
+            { q: "Bentham's doctrine of utility applied not only to morals but also:", o: ["Legislation and politics", "Economics", "Ethics", "Mathematics"], a: "a", topic: "Bentham" },
+            { q: "J.S. Mill was born in", o: ["Paris", "Moscow", "London", "Rome"], a: "c", topic: "J.S. Mill" },
+            { q: "System of Logic was written by", o: ["Marx", "Lenin", "Gramsci", "J.S.Mill"], a: "d", topic: "J.S. Mill" },
+            { q: "Who saved Betham from death and decay?", o: ["James Mill", "J.S.Mill", "Hegel", "Green"], a: "b", topic: "J.S. Mill" },
+            { q: "Who wrote that Mill is a prophet of empty liberty and abstract individual?", o: ["Marx", "Lenin", "Mao", "Ernest Barker"], a: "d", topic: "J.S. Mill" },
+            { q: "'Machinery of Representation' was written by", o: ["Thomas Hare", "J.S.Mill", "Harold Laski", "Hegel"], a: "a", topic: "Other" },
+            { q: "Who was the founder of modern Idealism?", o: ["Green", "Plato", "Gandhiji", "Hegel"], a: "d", topic: "Hegel" },
+            { q: "Hegel has borrowed dialectic method from", o: ["Plato", "Aristotle", "Socrates", "Hobbes"], a: "c", topic: "Hegel" },
+            { q: "The doctrine of 'what is real is rational and what is rational is real' is expounded by", o: ["Hegel", "Green", "Plato", "Aristotle"], a: "a", topic: "Hegel" },
+            { q: "The principle of 'greatest happiness of the greatest number' was expounded by", o: ["Hegel", "Green", "Bentham", "J.S.Mill"], a: "c", topic: "Bentham" },
+            { q: "Who adopted Hegelianism, to revise liberalism in the late 19th century?", o: ["J.S.Mill", "T.H.Green", "John Locke", "Harold Laski"], a: "b", topic: "T.H. Green" },
+            { q: "Green was born in", o: ["New York", "Yorkshire", "Paris", "Rome"], a: "b", topic: "T.H. Green" },
+            { q: "Lectures on Liberal Legislation was written by", o: ["T.H.Green", "J.S.Mill", "Harold Laski", "Burke"], a: "a", topic: "T.H. Green" },
+            { q: "The doctrine of 'will, not force, is the basis of state' was expounded by", o: ["Marx", "Green", "Hegel", "Mao"], a: "b", topic: "T.H. Green" },
+            { q: "Who regarded state as a natural and necessary institution?", o: ["Marx", "Lenin", "Bentham", "Green"], a: "d", topic: "T.H. Green" },
+            { q: "Who wrote that the function of the state is to remove obstacles to freedom", o: ["Marx", "Green", "Lenin", "Mao"], a: "b", topic: "T.H. Green" },
+            { q: "Who laid the foundations for modern welfare state?", o: ["Green", "Hegel", "Hobbes", "Gramsci"], a: "a", topic: "T.H. Green" },
+            { q: "Name the thinker who tried to safeguard the individual against the absolute power of the state;", o: ["Hegel", "Marx", "Green", "Hobbes"], a: "c", topic: "T.H. Green" },
+            { q: "Who defines freedom as of the positive power of doing something worth doing and worth enjoying?", o: ["Hegel", "Green", "Hobbes", "Locke"], a: "b", topic: "T.H. Green" },
+            { q: "Who rejected the mechanistic theory of the state?", o: ["Lenin", "Mao", "Marx", "Green"], a: "d", topic: "T.H. Green" },
+            { q: "Name the thinker who wrote that the state does not create right but the rights are derived from the state?", o: ["Hegel", "Hobbes", "Rousseau", "Green"], a: "a", topic: "Hegel" },
+            { q: "Which book is regarded as the Gospel or Bible of socialism?", o: ["State and revolution", "Prison Note book", "Contradictions", "Das capital"], a: "d", topic: "Marx" },
+            { q: "'Open society and its Enemies' was written by", o: ["Marx", "Karl popper", "John Rawls", "EMS"], a: "b", topic: "Other" },
+            { q: "Name the thinker who believes that the individual is subordinate to the state.", o: ["Hegel", "Green", "Bentham", "Marx"], a: "a", topic: "Hegel" },
+            { q: "Name the thinker who wrote that freedom consists in obedience to any moral will?", o: ["Marx", "Kant", "Hegel", "Green."], a: "b", topic: "Other" },
+            { q: "The doctrine of class struggle is central to the understanding of", o: ["Social contract Theory", "idealism", "liberalisation", "Marxian theory"], a: "d", topic: "Marx" },
+            { q: "Who wrote that class conflict is the real driving force of human history?", o: ["Hobbes", "Marx", "Hegel", "Bentham"], a: "b", topic: "Marx" },
+            { q: "Theory of surplus value is discussed by Marx in his major work:", o: ["What to be done", "state and revolution", "Das capital", "Prison note book"], a: "c", topic: "Marx" },
+            { q: "Name the scholar who criticised Marxism a 'utopia but a generous and humane one?", o: ["Lenin", "Popper", "Sabine", "C.L Wayper"], a: "c", topic: "Marx" },
+            { q: "Who made Marxism a practical creed in Russia?", o: ["Stalin", "Lenin", "Brezhveve", "Gorbachove"], a: "b", topic: "Lenin" },
+            { q: "Lenin was born in", o: ["Moscow", "Paris", "Simbrisk", "London"], a: "c", topic: "Lenin" },
+            { q: "Lenin's well known book 'State and Revolution' was written in", o: ["1917", "1920", "1925", "1927"], a: "a", topic: "Lenin" },
+            { q: "Who wrote that imperialism is the final or last stage of capitalism?", o: ["Laski", "Hobbes", "Lenin", "Rousseau"], a: "c", topic: "Lenin" },
+            { q: "Who described the communist party as the 'revolutionary vanguard of the proletariat'", o: ["Lenin", "Althusser", "Engels", "Gramsci"], a: "a", topic: "Lenin" },
+            { q: "Who expounded the doctrine that politics devoid of Religion is meaningless'?", o: ["Ambedkar", "Sree Narayana Guru", "Karl Marx", "Gandhiji"], a: "d", topic: "Gandhiji" },
+            { q: "Who wrote that non-violence is the heart of all religions?", o: ["Nehru", "Vivekananda", "Gandhiji", "Thilak"], a: "c", topic: "Gandhiji" },
+            { q: "Which method was regarded by Gandjiji as a 'complete effective and bloodless substitute of armed revolt?", o: ["Civil Disobedience", "Fasting", "Picketing", "Revolt"], a: "a", topic: "Gandhiji" },
+            { q: "Who characterised Gandhian Principle of ahimsa as a 'positive and dynamic method of action'?", o: ["Thilak", "Ambedkar", "Patel", "Nehru"], a: "d", topic: "Gandhiji" },
+            { q: "Gandhiji identifies Rama Rajya as :", o: ["Welfare State", "communist State", "Kingdom of god", "Democracy"], a: "c", topic: "Gandhiji" },
+            { q: "In the ideal state of Gandhiji there is no political power because there is no:", o: ["State", "God", "ethics", "Money power"], a: "a", topic: "Gandhiji" },
+            { q: "Gandhian principle of Economic swarj stands for", o: ["socialism", "Social justice", "End of capitalism", "Neo liberalism"], a: "b", topic: "Gandhiji" },
+            { q: "Gandhi was highly critical of", o: ["Capitalism", "Communism", "Fascism", "Both capitalism and Socialism"], a: "d", topic: "Gandhiji" },
+            { q: "In Gandhian economics the supreme consideration is", o: ["Human being", "State", "Economics", "Morality"], a: "a", topic: "Gandhiji" },
+            { q: "The Original name of Manvendra Nath Roy was", o: ["Desabhandu", "Narendranadh Bhattacharya", "Ramakrishna", "Gokhale"], a: "b", topic: "M.N. Roy" },
+            { q: "Who regards Marx as a merciless critic of social injustice?", o: ["Stalin", "M.N.Roy", "Gandhiji", "Nehru"], a: "b", topic: "M.N. Roy" },
+            { q: "Who regarded Marxian theory of class struggle has subordinated individual consciousness?", o: ["M.N.Roy", "Savarkar", "Gandhiji", "Nehru"], a: "a", topic: "M.N. Roy" },
+            { q: "Who is the chief exponent of the doctrine of New Humanism?", o: ["Marx", "Lenin", "Mao", "M.N.Roy"], a: "d", topic: "M.N. Roy" },
+            { q: "Roy's theory of New Humanism revolves around :", o: ["State", "society", "Man", "Economy"], a: "c", topic: "M.N. Roy" },
+            { q: "Roy reduces the functions of the state to the", o: ["Maximum", "Minimum", "Unlimited", "None of the above"], a: "b", topic: "M.N. Roy" },
+            { q: "Reason romanticism and revolution was written by", o: ["M.N.Roy", "Karl Marx", "Lenin", "Mao"], a: "a", topic: "M.N. Roy" },
+            { q: "Who believes that party politics has given rise to power politics'", o: ["Gandhiji", "Thilak", "M.N.Roy", "Nehru"], a: "c", topic: "M.N. Roy" },
+            { q: "Name the political thinker who recommends abolition of party system", o: ["M.N.Roy", "Gandhiji", "Nehru", "Ambedkar"], a: "a", topic: "M.N. Roy" },
+            { q: "Gramsci was imprisoned by Mussolini in", o: ["1921", "1925", "1926", "1937"], a: "c", topic: "Gramsci" },
+            { q: "Who held view that each individual gave up his natural rights to the community as a whole.", o: ["Hobbes", "Rousseau", "Locke", "Hegel"], a: "b", topic: "Rousseau" },
+            { q: "Identify the thinker who believed that from the laws of nature, individuals derived the natural rights.", o: ["Hobbes", "Rousseau", "Locke", "Plato"], a: "c", topic: "Locke" },
+            { q: "Name the philosopher who explains the theory of class struggle with the help of his theory of surplus value.", o: ["Hobbes", "Bakunin", "Plato", "Marx"], a: "d", topic: "Marx" },
+            { q: "Marx employed the term Alienation to explain.", o: ["Dehumanisation", "Exploitation", "Class struggle", "Surplus Value"], a: "a", topic: "Marx" },
+            { q: "Who expounded the theory that once communism is fully established, the state becomes absolutely unnecessary?", o: ["Plato", "Lenin", "Bakunin", "J.S.Mill"], a: "b", topic: "Lenin" },
+            { q: "Lenin's major work 'What is To Be Done?' was published in", o: ["1888", "1900", "1902", "1917"], a: "c", topic: "Lenin" },
+            { q: "Mao was born in", o: ["1893", "1888", "1917", "1900"], a: "a", topic: "Mao" },
+            { q: "'Analysis of Chinese Society' was written by", o: ["Deng", "Hu Jintao", "Mao", "None of the above"], a: "c", topic: "Mao" },
+            { q: "The doctrine of contradiction is one of the cardinal Principles of", o: ["Marx", "Lenin", "Gramsci", "Mao"], a: "d", topic: "Mao" },
+            { q: "Identify the philosopher who gave a famous call of 'Let Hundred Flowers Bloom'", o: ["Mao", "Marx", "Lenin", "Gramsci"], a: "a", topic: "Mao" },
+            { q: "The principle of Mass Line Populism was expounded by", o: ["Locke", "Hegel", "Marx", "Mao"], a: "d", topic: "Mao" },
+            { q: "The doctrine of 'Contradiction' is closely associated with the philosophy of:", o: ["Rousseau", "Mao", "Marx", "Gramsci"], a: "b", topic: "Mao" },
+            { q: "The theory of 'Great Leap Forward' was recommended by", o: ["Mao", "Marx", "Lenin", "Gramsci"], a: "a", topic: "Mao" },
+            { q: "The Great Proletarian Cultural Revolution was expounded by", o: ["Marx", "Lenin", "Mao", "Bakunin"], a: "c", topic: "Mao" },
+            { q: "The word 'anarchy' means", o: ["Rule", "Without rule", "Peace", "Government"], a: "b", topic: "Anarchism" },
+            { q: "Which school of thought believes that political authority is unnecessary and undesirable?", o: ["Socialism", "Democracy", "Liberalism", "Anarchism"], a: "d", topic: "Anarchism" },
+            { q: "Who is regarded as the first classical Anarchist thinker?", o: ["Mussolini", "Hitler", "Godwin", "Mao"], a: "c", topic: "Anarchism" },
+            { q: "Mao started his career as a", o: ["Teacher", "Librarian", "Doctor", "Lawyer"], a: "b", topic: "Mao" },
+            { q: "Who is the author of 'An enquiry concerning political Justice'?", o: ["Marx", "Lenin", "Mao", "Godwin"], a: "d", topic: "Anarchism" },
+            { q: "Who is regarded as the most systematic anarchist thinker?", o: ["Bakunin", "Marx", "Godwin", "Mao"], a: "a", topic: "Anarchism" },
+            { q: "Bakunin was born in", o: ["1841", "1814", "1872", "1842"], a: "b", topic: "Anarchism" },
+            { q: "Whose activities were predominantly in the field of practical agitation and organization?", o: ["Marx", "Mao", "Hobbes", "Bakunin"], a: "d", topic: "Anarchism" },
+            { q: "Who believed that state is morally debasing to all members of the civilised community?", o: ["Locke", "Rousseau", "Bakunin", "Marx"], a: "c", topic: "Anarchism" },
+            { q: "Who believed that private property creates physical and moral evils of the kinds?", o: ["Bakunin", "Locke", "Hobbes", "Hegel"], a: "a", topic: "Anarchism" },
+            { q: "Name the political thinker who recommended both evolutionary and revolutionary methods for the attainment of his goals.", o: ["Lenin", "Bakunin", "Hegel", "Hobbes"], a: "b", topic: "Anarchism" },
+            { q: "Identify the anarchist who is regarded as a Russian Geographer", o: ["Godwin", "Bakunin", "Kropotkin", "None of the above"], a: "c", topic: "Anarchism" },
+            { q: "Peter Kropotkin was born in;", o: ["1842", "1814", "1841", "1921"], a: "a", topic: "Anarchism" },
+            { q: "Name the political thinker who believed that the hindrances to the progress of human society are the state, private property and religion.", o: ["Bakunin", "Kropotkin", "Lenin", "Mao"], a: "b", topic: "Anarchism" },
+            { q: "Which school of thought is highly critical of religion?", o: ["Liberalism", "Capitalism", "Anarchism", "Individualism"], a: "c", topic: "Anarchism" },
+            { q: "Who is the author of 'Socialism: Utopian and Scientific'?", o: ["Engels", "Marx", "Lenin", "Mao"], a: "a", topic: "Marx" },
+            { q: "Marx borrowed his Dialectic method from:", o: ["Green", "Burke", "Hegel", "Aristotle"], a: "c", topic: "Marx" },
+            { q: "Diatectical Materialism of Marx is more interested in motion than :", o: ["Matter", "Ideas", "Economy", "None of these"], a: "a", topic: "Marx" },
+            { q: "Name the scholar who believed that the economic structure of society determines the superstructure of consciousness.", o: ["Hegel", "Plato", "Marx", "Gramsci"], a: "c", topic: "Marx" },
+            { q: "The thesis entitled 'the anatomy of civil society is to be found in political economy'", o: ["Lenin", "Plato", "Lenin", "Marx"], a: "d", topic: "Marx" },
+            { q: "The first volume of Das Capital is published in.", o: ["1848", "1867", "1852", "1870"], a: "b", topic: "Marx" },
+            { q: "Who described his socialism as scientific?", o: ["Plato", "Robert Own", "Marx", "Gramsci"], a: "c", topic: "Marx" },
+            { q: "Who interpreted liberalism and classical economics as articulating and defending the interests of the middle class?", o: ["Marx", "Hobbes", "Locke", "Rousseau"], a: "a", topic: "Marx" },
+            { q: "Name the Philosopher who has adapted Hegelianism to revise liberalism in the late 19th century", o: ["Burke", "Locke", "Green", "Laski"], a: "c", topic: "T.H. Green" },
+            { q: "Who rejects the liberal concept of freedom as absence of restraints?", o: ["Hobbes", "Burke", "Rawls", "Hegel"], a: "d", topic: "Hegel" },
+            { q: "Identify the scholar who has considered freedom 'Consists in his submitting to and identifying himself with the higher rationality of state and law'.", o: ["Hegel", "Green", "Locke", "Hobbes"], a: "a", topic: "Hegel" },
+            { q: "Who believed that rights are derived from the state and therefore no man and have any right against the state?", o: ["Green", "Hobbes", "Hegel", "Locke"], a: "c", topic:Such: "Hegel" },
+            { q: "Name the Philosopher who considered the state as the highest manifestation of reason.", o: ["Green", "Marx", "Rawls", "Hegel"], a: "d", topic: "Hegel" },
+            { q: "Who considered the dialectical principle 'constitutes the life and soul of scientific progress'?", o: ["Plato", "Marx", "Hegel", "Engels"], a: "c", topic: "Hegel" },
+            { q: "Who believed that history is the process by which the spirit passes from knowing nothing to full knowledge of itself?", o: ["Plato", "Green", "Marx", "Hegel"], a: "d", topic: "Hegel" },
+            { q: "The essay entitled 'On the people's Democratic Dictatorship' was written by", o: ["Mao", "Gramsui", "Marx", "Lenin"], a: "a", topic: "Mao" },
+            { q: "Name the Philosopher who lived at a time of great constitutional crisis in England.", o: ["Laski", "Burke", "Hobbes", "Locke"], a: "c", topic: "Hobbes" },
+            { q: "The theory of consent is closely related to the writings of", o: ["Hobbes", "Locke", "Rousseau", "Bentham"], a: "b", topic: "Locke" },
+            { q: "Who expounded the theory that the general will would be the source of all laws?", o: ["Rousseau", "Locke", "Hobbes", "Hegel"], a: "a", topic: "Rousseau" },
+            { q: "Name the thinker who believed that the government is the agent of the general will", o: ["Locke", "Hobbes", "Hegel", "Rousseau"], a: "d", topic: "Rousseau" },
+            { q: "In whose social contract man does not surrender completely to a sovereign ruler?", o: ["Locke", "Rousseau", "Hobbes", "None of these"], a: "b", topic: "Rousseau" },
+            { q: "Who viewed hedonism not only as a principle of motivation, but also a principle of action?", o: ["Bentham", "Mill", "Hegel", "James Mill"], a: "a", topic: "Bentham" },
+            { q: "Name the Scholar who criticized Bentham's Pleasure pain theory as 'uninspiring and merely mechanical'", o: ["C.C.Maxey", "C.L.Wayper", "Ebenstein", "Sabine"], a: "c", topic: "Bentham" },
+            { q: "Identify the thinker who wrote that 'State is a moral institution with a moral end'", o: ["J.S.Mill", "Bentham", "Marx", "Hegel"], a: "a", topic: "J.S. Mill" },
+            { q: "Who regarded utility as a noble sentiment associated with Christian religion?", o: ["James Mill", "Bentham", "J.S.Mill", "Hegel"], a: "c", topic: "J.S. Mill" },
+            { q: "Who declared that 'Over himself, over his own body and mind, the individual is sovereign'", o: ["Bentham", "Marx", "Mao", "J.S.Mill"], a: "d", topic: "J.S. Mill" },
+            { q: "Name the Scholar who holds the view that man obeys the state because he is afraid of the consequences of disobedience.", o: ["Hegel", "Green", "Marx", "Lenin"], a: "a", topic: "Hegel" },
+            { q: "Identify the scholar who believed that class struggle in the modern period is simpler than earlier class struggle.", o: ["Plato", "Hegel", "Marx", "Gramsci"], a: "c", topic: "Marx" },
+            { q: "Marx explains the whole process of exploitation with the help of his theory of", o: ["Dialectical Materialism", "Surplus Value", "Historical Materialism", "None of these"], a: "b", topic: "Marx" },
+            { q: "Who expounded the thesis that capitalism contains its own seeds of destruction?", o: ["Marx", "Plato", "Hobbes", "Rousseau"], a: "a", topic: "Marx" },
+            { q: "Lenin's major work 'State and Revolution' was written in", o: ["1900", "1914", "1917", "1947"], a: "c", topic: "Lenin" },
+            { q: "Who made the statement that as soon as communism is established, the state becomes unnecessary?", o: ["Mao", "Lenin", "Plato", "None of these"], a: "b", topic: "Lenin" },
+            { q: "Name the leader who made a distinction between organization of workers and organization of revolutionaries.", o: ["Mao", "Gramsui", "Lenin", "Plato"], a: "c", topic: "Lenin" },
+            { q: "Which political leadership now describes the cultural revolution as nothing less than a calamity for their country;", o: ["Present Communist leadership in China", "Mao", "American", "Russian"], a: "a", topic: "Mao" }
         ];
 
+        let quizQuestions = []; // This will hold the shuffled questions
         let currentQuestionIndex = 0;
         let correctAnswers = 0;
 
-        const questionCounterEl = document.getElementById('question-counter');
+        // DOM Elements
         const questionTextEl = document.getElementById('question-text');
         const optionsContainerEl = document.getElementById('options-container');
         const optionButtons = document.querySelectorAll('.option-btn');
         const feedbackTextEl = document.getElementById('feedback-text');
         const nextBtnEl = document.getElementById('next-btn');
         const progressBarEl = document.getElementById('progress-bar');
+        const infoAreaEl = document.getElementById('info-area');
+        const infoListEl = document.getElementById('info-list');
+        const jumpDropdownEl = document.getElementById('jump-dropdown');
+        const shuffleBtnEl = document.getElementById('shuffle-btn');
 
+        /**
+         * Utility function to shuffle an array (Fisher-Yates)
+         */
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        /**
+         * Populates the "Jump to" dropdown menu
+         */
+        function populateJumpDropdown() {
+            jumpDropdownEl.innerHTML = ''; // Clear old options
+            for (let i = 0; i < quizQuestions.length; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Question ${i + 1}`;
+                jumpDropdownEl.appendChild(option);
+            }
+        }
+
+        /**
+         * Starts a new quiz: shuffles, populates dropdown, loads first question
+         */
+        function startNewQuiz() {
+            quizQuestions = [...questions]; // Create a copy of the master list
+            shuffleArray(quizQuestions);    // Shuffle the copy
+            currentQuestionIndex = 0;
+            correctAnswers = 0;
+            populateJumpDropdown();
+            loadQuestion();
+        }
+
+        /**
+         * Loads the question at the currentQuestionIndex
+         */
         function loadQuestion() {
-            if (currentQuestionIndex >= questions.length) {
+            if (currentQuestionIndex >= quizQuestions.length) {
                 showResults();
                 return;
             }
@@ -353,18 +503,20 @@
             // Reset UI
             feedbackTextEl.textContent = '';
             nextBtnEl.style.visibility = 'hidden';
+            infoAreaEl.style.display = 'none'; // Hide related info
+            infoListEl.innerHTML = '';      // Clear related info
             optionButtons.forEach(btn => {
                 btn.disabled = false;
                 btn.classList.remove('correct', 'incorrect');
             });
 
-            // Load new question
-            const q = questions[currentQuestionIndex];
+            // Load new question data
+            const q = quizQuestions[currentQuestionIndex];
             questionTextEl.textContent = q.q;
-            questionCounterEl.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
-            
-            // Update progress bar
-            progressBarEl.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+
+            // Update progress bar & jumpdown
+            progressBarEl.style.width = `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%`;
+            jumpDropdownEl.value = currentQuestionIndex;
 
             // Load options
             optionButtons.forEach((btn, index) => {
@@ -373,10 +525,14 @@
             });
         }
 
+        /**
+         * Handles the user clicking an option button
+         */
         function handleOptionClick(event) {
             const selectedBtn = event.target;
             const selectedOption = selectedBtn.getAttribute('data-option');
-            const correctAnswer = questions[currentQuestionIndex].a;
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+            const correctAnswer = currentQuestion.a;
 
             // Disable all buttons
             optionButtons.forEach(btn => btn.disabled = true);
@@ -385,42 +541,90 @@
             if (selectedOption === correctAnswer) {
                 selectedBtn.classList.add('correct');
                 feedbackTextEl.textContent = 'Correct!';
-                feedbackTextEl.style.color = '#2f855a';
+                feedbackTextEl.style.color = 'var(--correct-text)';
                 correctAnswers++;
             } else {
                 selectedBtn.classList.add('incorrect');
                 feedbackTextEl.textContent = 'Incorrect!';
-                feedbackTextEl.style.color = '#c53030';
+                feedbackTextEl.style.color = 'var(--incorrect-text)';
                 // Highlight the correct answer
                 const correctBtn = document.querySelector(`.option-btn[data-option="${correctAnswer}"]`);
                 correctBtn.classList.add('correct');
             }
 
+            // Show related info
+            showRelatedInfo(currentQuestion.topic);
+
             // Show 'Next' button
             nextBtnEl.style.visibility = 'visible';
         }
 
+        /**
+         * Shows the related info box by scanning the master 'questions' list
+         */
+        function showRelatedInfo(topic) {
+            if (topic === "Other") {
+                infoAreaEl.style.display = 'none';
+                return;
+            }
+            
+            // Find all questions with the same topic
+            const relatedFacts = questions.filter(item => item.topic === topic);
+            const currentQuestionText = quizQuestions[currentQuestionIndex].q;
+            
+            infoListEl.innerHTML = ''; // Clear list
+            let factsFound = 0;
+
+            relatedFacts.forEach(fact => {
+                // Don't show the question that is currently being asked
+                if (fact.q !== currentQuestionText) {
+                    const li = document.createElement('li');
+                    // Get the text of the correct answer
+                    const answerIndex = ['a', 'b', 'c', 'd'].indexOf(fact.a);
+                    const answerText = fact.o[answerIndex];
+                    
+                    li.innerHTML = `${fact.q} <br>&#8594; <span class"ans">${answerText}</span>`;
+                    infoListEl.appendChild(li);
+                    factsFound++;
+                }
+            });
+
+            // Only show the box if there are other facts to show
+            if (factsFound > 0) {
+                infoAreaEl.style.display = 'block';
+            } else {
+                infoAreaEl.style.display = 'none';
+            }
+        }
+        
+        /**
+         * Jumps to the question selected in the dropdown
+         */
+        function jumpToQuestion() {
+            currentQuestionIndex = parseInt(jumpDropdownEl.value);
+            loadQuestion();
+        }
+
+        /**
+         * Loads the next question
+         */
+        function nextQuestion() {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        /**
+         * Displays the final results screen
+         */
         function showResults() {
             document.getElementById('question-area').innerHTML = `
                 <h2 style="font-size: 24px; text-align: center;">Quiz Complete!</h2>
                 <p style="font-size: 18px; text-align: center; margin-top: 20px;">
-                    You scored ${correctAnswers} out of ${questions.length}
+                    You scored ${correctAnswers} out of ${quizQuestions.length}
                 </p>
-                <button id="restart-btn" style="background-color: #4299e1; color: white; border: none; border-radius: 8px; padding: 14px 28px; font-size: 16px; font-weight: 700; cursor: pointer; transition: background-color 0.2s ease; display: block; width: 200px; margin: 30px auto 0;">
-                    Restart Quiz
-                </button>
             `;
             document.getElementById('feedback-area').style.display = 'none';
-            questionCounterEl.textContent = 'Quiz Finished';
-            
-            document.getElementById('restart-btn').addEventListener('click', () => {
-                location.reload(); // Simple way to restart
-            });
-        }
-
-        function nextQuestion() {
-            currentQuestionIndex++;
-            loadQuestion();
+            infoAreaEl.style.display = 'none';
         }
 
         // Event Listeners
@@ -428,9 +632,11 @@
             btn.addEventListener('click', handleOptionClick);
         });
         nextBtnEl.addEventListener('click', nextQuestion);
+        shuffleBtnEl.addEventListener('click', startNewQuiz);
+        jumpDropdownEl.addEventListener('change', jumpToQuestion);
 
         // Initial load
-        loadQuestion();
+        document.addEventListener('DOMContentLoaded', startNewQuiz);
     </script>
 
 </body>
